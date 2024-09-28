@@ -5,7 +5,7 @@ from flask.cli import with_appcontext, AppGroup
 from App.database import db, get_migrate
 from App.models import User
 from App.main import create_app
-from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize )
+from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize, add_student, search_student,add_review, view_student_reviews)
 
 
 # This commands file allow you to create convenient CLI commands for testing controllers
@@ -46,6 +46,38 @@ def list_user_command(format):
         print(get_all_users())
     else:
         print(get_all_users_json())
+
+#add student command
+@user_cli.command("add_student", help="Adds a new student")
+@click.argument("student_id", type=int)
+@click.argument("student_name")
+def add_student_command(student_id, student_name):
+    result = add_student(student_id, student_name)
+    print(result["message"])
+
+#search student command
+@user_cli.command("search_student", help="Search for a student by ID")
+@click.argument("student_id")
+def search_student_command(student_id):
+    result = search_student(student_id)  # Only one return value
+    print(result)
+
+#add student review command
+@user_cli.command("add_review", help="Add a review for a student")
+@click.argument("student_id")
+@click.argument("staff_id")
+@click.argument("review_text")
+@click.argument("rating", type=int)
+def add_review_command(student_id, staff_id, review_text, rating):
+    result = add_review(student_id, staff_id, review_text, rating)
+    print(f"Review added: {result}")
+
+#view student review command
+@user_cli.command("view_reviews", help="View reviews for a specific student")
+@click.argument("student_id")
+def view_reviews_command(student_id):
+    result = view_student_reviews(student_id)
+    print(result)
 
 app.cli.add_command(user_cli) # add the group to the cli
 

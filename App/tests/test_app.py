@@ -3,14 +3,15 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from App.main import create_app
 from App.database import db, create_db
-from App.models import User
+from App.models import User, Student, Review
 from App.controllers import (
     create_user,
     get_all_users_json,
     login,
     get_user,
     get_user_by_username,
-    update_user
+    update_user, search_student, add_student,
+    add_review, view_student_reviews
 )
 
 
@@ -75,5 +76,4 @@ class UsersIntegrationTests(unittest.TestCase):
         update_user(1, "ronnie")
         user = get_user(1)
         assert user.username == "ronnie"
-        
 
